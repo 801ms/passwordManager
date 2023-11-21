@@ -1,27 +1,27 @@
 from cryptography.fernet import Fernet
 
-import keyGen
-
-pwd = ""
-
 masterPwd = input("Enter the master password: ")
 
 def keyGeneratedCheck():
     with open("keyGeneratedCheck.txt", "r") as f:
-        checkBool = f.readline()
-        if checkBool == "True":
+        checkText = f.read()
+        if checkText == "True":
             checkBool = True
             print("Key already generated. Prepare to enter generated key to decrypt files.")
         else:
             checkBool = False
-            with open("keyGeneratedCheck.txt", "a") as f:
-                f.write("True")
+            writeKey()
+            with open("keyGeneratedCheck.txt", "w") as f:
+                checkBoolOverwrite = checkText.replace("False", "True")
+                f.write(checkBoolOverwrite)
 
+def writeKey():
+    key = Fernet.generate_key()
+    print(key)
+    with open ("key.key", "wb") as keyFile:
+        keyFile.write(key)
 
-
-def encrypt():
-    token = key.encrypt(pwd)
-    token
+keyGeneratedCheck()
 
 #https://stackoverflow.com/questions/41029991/imported-variable-is-not-defined
 
@@ -37,7 +37,6 @@ def view():
 def add():
     name = input("Enter account name: ")
     pwd = input("Password: ")
-    pwd = encrypt()
     with open("passwords.txt", "a") as f:
         f.write(name + "|" + pwd + "\n")
 
